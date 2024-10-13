@@ -1,0 +1,108 @@
+{% extends 'core/Rachid_base.html' %}
+{% block title %}products reviews{% endblock title %}
+{% block rachid %}
+
+{% if products %}
+    {% for product in products %}
+        <div class="row mt-5">
+            <!-- Product Card -->
+            <div class="col-md-8 col-sm-12 mb-4">
+                <div class="card">
+                    <img class="card-img-top" src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 100%; height: 250px;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">
+                            <span class="text-muted" style="text-decoration: line-through;">{{ product.original_price }} MAD</span>
+                            <span class="text-danger h4 ml-2">{{ product.promotion_price }} MAD</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reviews Section -->
+            <div class="col-md-4 col-sm-12">
+                <h4>Reviews</h4>
+
+                <!-- List of Reviews -->
+                <ul class="list-group">
+                    {% for review in product.reviews.all %}
+                    
+                    {% if review.is_active %}
+                                                
+                        <li class="list-group-item">
+                            <strong>{{ review.user }}:</strong> 
+                            <p>{{ review.comment }}</p>
+                            <p>Rating: {{ review.rating }} / 5</p>
+
+                            <!-- List of Replies to Review -->
+                            <button class="btn btn-secondary btn-sm" onclick="toggleElement('replies-{{ review.id }}')">Show/Hide Replies</button>
+                            <div id="replies-{{ review.id }}" class="mt-2">
+                                <h6>Replies</h6>
+                                <ul>
+                                    {% for reply in review.replies.all %}
+                                        <li>
+                                            <strong>{{ reply.user.username }}:</strong> {{ reply.reply_data }}
+                                            {% if not reply.is_active %}
+                                                <span class="text-muted">(Hidden)</span>
+                                            {% endif %}
+                                            
+                                            <!-- Staff/Admin Actions for Replies -->
+                                            {% if user.is_staff %}
+                                                <div>
+                                                    <a href="{% url 'product:reply_edit' reply.id %}" class="btn btn-warning btn-sm m-1">Edit</a>
+                                                    <a href="{% url 'product:reply_toggle_visibility' reply.id %}" class="btn btn-danger btn-sm m-1">{{ reply.is_active|yesno:'Hide,Unhide' }}</a>
+                                                </div>
+                                            {% endif %}
+                                        </li>
+                                    {% empty %}
+                                        <li>No replies yet.</li>
+                                        <div>
+                                            <a href="{% url 'product:reply_add' review.id %}" class="btn btn-success btn-sm m-1">{{ reply.is_active|yesno:'Reply,Reply' }}</a>
+                                        </div>
+
+                                        {% endfor %}
+                                </ul>
+                            </div>
+
+                            <!-- Staff/Admin Actions for Reviews -->
+                            {% if user.is_staff %}
+                                <div>
+                                    <a href="{% url 'product:review_edit' review.id %}" class="btn btn-warning btn-sm m-1">Edit Review</a>
+                                    <a href="{% url 'product:review_toggle_visibility' review.id %}" class="btn btn-danger btn-sm m-1">{{ review.is_active|yesno:'Hide,Unhide' }}</a>
+                                </div>
+                            {% endif %}
+                        </li>
+                        {% endif %}
+                    {% empty %}
+                        <li>No reviews yet.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <hr>
+    {% endfor %}
+{% else %}
+    <div class="container text-center mt-5">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="card shadow-sm p-4">
+                    <h1 class="display-4 text-danger">No Products Available</h1>
+                    <p class="lead">There are no products to display at the moment.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<script>
+    // Function to toggle show/hide of elements
+    function toggleElement(elementId) {
+        const element = document.getElementById(elementId);
+        if (element.classList.contains('d-none')) {
+            element.classList.remove('d-none');
+        } else {
+            element.classList.add('d-none');
+        }
+    }
+</script>
+{% endblock %}

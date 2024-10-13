@@ -1,0 +1,46 @@
+{% extends 'core/Rachid_base.html' %}
+{% block title %}your products{% endblock title %}
+{% block rachid %}
+<div class="container">
+    <h4 class="text-center mt-4">Your Products</h4>
+    <div class="row"> 
+    <div class="col-4"> 
+        <a href="{% url 'product:add_product' %}" class="btn btn-primary mb-3">Add New Product</a>
+    </div>
+    <div class="col-4"> 
+        <a href="{% url 'product:review_manipulation' %}" class="btn btn-primary mb-3">Review Section</a>
+    </div>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Original Price</th>
+                <th>Promotion Price</th>
+                <th>stock</th>
+                <th>Average Ratings</th>
+                <th>Quantity</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td><img src="{{ product.images.all.first.image.url }}" alt='{{product.name}}' width="90px" height="160px" class="img-fluid ms-3"/></td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.original_price }} MAD</td>
+                <td>{{ product.promotion_price }} MAD</td>
+                <td>{% if product.in_stock %} Yes {% else %} NO {% endif %}</td>
+                <td>{{ product.average_rating }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>
+                    <a href="{% url 'product:edit_product' product.id %}" class="btn btn-warning">Edit</a>
+                    <a href="{% url 'product:delete_product' product.id %}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

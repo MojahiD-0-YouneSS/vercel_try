@@ -1,0 +1,28 @@
+{% extends 'core/Rachid_base.html' %}
+{% block title %}edit order{% endblock title %}
+
+
+{% block rachid %}
+    <div>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Order Form Fields -->
+            <h3>Edit Order</h3>
+            {{ form.as_p }}
+            
+            <!-- Order Items Formset -->
+            <h3>Order Items</h3>
+            {{ formset.management_form }}
+            {% for form in formset %}
+                <div class="order-item-form">
+                    {{ form.as_p }}
+                </div>
+            {% endfor %}
+            
+            <button type="submit" class="btn btn-primary">Save Order</button>
+        </form>
+        
+    </div>
+{% endblock rachid %}
+    

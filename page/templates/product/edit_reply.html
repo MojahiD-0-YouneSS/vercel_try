@@ -1,0 +1,24 @@
+{% extends 'core/Rachid_base.html' %}
+{% load static %}
+
+{% block title %}Edit Review{% endblock %}
+
+{% block rachid %}
+<div class="container mt-5">
+    <h2>Edit Review</h2>
+    
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.reply_data.label_tag }} 
+            {{ form.reply_data }} 
+        </div>
+        <div class="form-group">
+            {{ form.is_active.label_tag }} 
+            <p class="ml-5 mb-5">{{ form.is_active }}</p> 
+        </div>
+        <button type="submit" class="btn btn-success">Save Changes</button>
+        <a href="{% url 'product:review_manipulation' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

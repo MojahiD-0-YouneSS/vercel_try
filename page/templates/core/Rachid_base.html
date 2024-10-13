@@ -1,0 +1,98 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Sidebar Template{% endblock title %}
+
+{% block extrastyle %}
+<link href="{% static 'CSS\rachid_style.css' %}" rel="stylesheet">
+{% endblock extrastyle %}
+    
+{% block content %}
+{% if request.user.is_authenticated %}        
+<div class="row">
+        <div class="col-lg-2 col-md-3">
+            <div class="sidebar">
+                <a  href="{% url 'Rachid:rhome' %}" id="home-btn">Home</a>
+                <a href="{% url 'Rachid:dashboard' %}" id="dashboard-btn">Dashboard</a>
+                <a href="{% url 'Rachid:rorders' %}" id="orders-btn">
+                    <div class="row">
+                    <div class="col-2 mt-3">
+                       Orders
+                    </div>
+                    <div class="col-1  ml-5">
+                        <div class="notification">
+                            <!-- Bell icon (Bootstrap icon or Font Awesome) -->
+                            <button type="button" class="btn btn-light position-relative">
+                                <i class="bi bi-bell" style="font-size: 1.5rem;"></i>
+                                <!-- Badge showing the number of messages -->
+                                <span class="badge" id="notification-count">{{pending_orders|yesno:"{pending_orders}, 0"}}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                </a>
+                <a href="{% url 'product:product_list' %}" id="products-btn">Products</a>
+                <a href="{% url 'Rachid:rvisitors' %}" id="visitors-btn">Visitors</a>
+                <a href="{% url 'Rachid:cmvc' %}" id="contacts-btn">Contacts Made via Calls</a>
+                <a href="{% url 'core:logout' %}" id="logout-btn">Logout</a>
+            </div>
+        </div>
+
+        <div class="container col-lg-10 col-md-9">
+            <div class="xy ml-3">
+                
+                {% block rachid %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Select all the buttons (anchor tags in this case)
+const buttons = document.querySelectorAll('.sidebar a');
+
+// Function to set the active button
+function setActiveButton(button) {
+    // Remove 'active' class from all buttons
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    // Add 'active' class to the clicked button
+    button.classList.add('active');
+    
+    // Store the ID of the active button in localStorage
+    localStorage.setItem('activeButtonId', button.id);
+}
+
+// Retrieve the active button from localStorage and set it as active
+window.addEventListener('DOMContentLoaded', (event) => {
+    const activeButtonId = localStorage.getItem('activeButtonId');
+    
+    if (activeButtonId) {
+        // If there's an active button saved in localStorage, activate it
+        const activeButton = document.getElementById(activeButtonId);
+        if (activeButton) {
+            setActiveButton(activeButton);
+        }
+    } else {
+        // If no active button is saved, set 'home-btn' as the default active
+        setActiveButton(document.getElementById('home-btn'));
+    }
+});
+
+// Add click event listener to each button
+buttons.forEach(button => {
+    button.addEventListener('click', function(event) {
+        // Prevent default action for non-navigation buttons like '#'
+        if (button.href === "#") {
+            event.preventDefault();
+        }
+        
+        // Set the clicked button as active
+        setActiveButton(button);
+    });
+});
+
+    </script>
+</div>
+{% endif %}
+{% endblock content %}
+    

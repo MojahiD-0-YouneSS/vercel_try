@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block extrastyle %}
+<link href="{% static 'CSS\client_style.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+{% endblock extrastyle %}
+    
+{% block content %}
+{% include "core/banner.html" %}
+<div class="container mt-3">
+    {% block client %}
+    
+    {% endblock %}
+</div>
+
+{% endblock content %}
+    

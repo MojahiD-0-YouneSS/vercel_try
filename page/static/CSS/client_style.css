@@ -1,0 +1,95 @@
+.checked {
+  color: orange;
+}
+
+.pop_out{
+    position: fixed; 
+    top: 10%;
+    bottom: 10%;
+    left: 55%; 
+    right: 5%; 
+    width: 40%;
+    /*height: 70%;*/ 
+    z-index: 1050;
+}
+.nav_pop_out{
+    position: fixed; 
+    top: 10%;
+    bottom: 20%;
+    left: 30%; 
+    right: 30%; 
+    width: 40%;
+    /*height: 70%;*/ 
+    z-index: 1050;
+}
+
+.pop_out_info{
+    overflow-y: auto;
+    overflow-x: hidden;
+
+}
+
+.user_window{
+  left: 25%;
+  width: 50%;
+  height: 50%;
+  right: 25%;
+  bottom: 15%;
+  top: 35%;
+  border: slategray 5px solid;
+  border-radius: 5%;
+  padding: 35px;
+}
+.user_window{
+  border: slategray 3px solid;
+  border-radius: 5%;
+  padding: 35px;
+}
+/* banner settings*/
+
+.video-banner , #videoBanner {
+  width: 100%;           /* Make sure the video stretches across the width of the screen */
+  height: 55vh;          /* Set the height to 30% of the viewport height */
+  object-fit: cover;     /* Ensure the video covers the entire area without distortion */
+  /*overflow: hidden;          Prevents any content from overflowing */
+  min-height: 55vh;         /* Ensures video never shrinks below 30% of the viewport height */
+  max-height: 55vh;
+}
+/*
+.carousel-item {
+  transition: height 0.3s ease-in-out, width 0.3s ease-in-out;
+}
+
+/* banner controls
+.carousel-control-prev, .carousel-control-next {
+  background-color: transparent;
+  border: transparent solid 5px;
+}
+
+/* Make the entire control button fully visible on hover
+.carousel-control-prev:hover, .carousel-control-next:hover {
+  background-color: #e2e6ea;
+
+}
+*/
+
+/*product image manipulation */
+
+.zooming-container {
+  position: relative;
+  overflow: hidden;
+  width: 100%;  
+  height: auto;
+}
+
+.zooming {
+  transition: transform 0.3s ease-in-out;
+  transform-origin: center; 
+  will-change: transform; 
+  width: 100%; 
+}
+
+.zooming-container:hover .zooming {
+  transform: scale(2); 
+  cursor: zoom-in;     
+}

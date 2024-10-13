@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+        }
+        .order-details {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .order-details td, .order-details th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        .order-details th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h2>New Order Placed!</h2>
+    </div>
+
+    <div class="content">
+        <strong><p>Hello,</p>
+        <p>A new order has been placed on your store. Please review the order details below and process it as soon as possible.</p>
+        </strong>
+        <table class="order-details">
+            <tr>
+                <th>Order ID</th>
+                <td>{{ order_id }}</td>
+            </tr>
+            <tr>
+                <th>Customer Name</th>
+                <td>{{ customer_name }}</td>
+            </tr>
+            <tr>
+                <th>Customer Phone</th>
+                <td>{{ customer_phone }}</td>
+            </tr>
+            <tr>
+                <th>Ordered Products</th>
+                <td>
+                    <ul>
+                    {% for product in products %}
+                        <li>{{ product.name }} (Quantity: {{ product.quantity }})</li>
+                    {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th>Total Price</th>
+                <td>${{ total_price }}</td>
+            </tr>
+            <tr>
+                <th>Order Date</th>
+                <td>{{ order_date }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="footer">
+        <p>This is an automated message from your store.</p>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+{% extends 'core/client_base.html' %}
+{% block title %} الطلب {% endblock title %}
+{% block client %}
+<div class="container mt-5 user_window ">
+    <h2 class="text-center mb-4">"قم بتقديم معلوماتك"</h2>
+
+    <form method="POST" action="{% url 'client:add_info' product_id %}">
+        {% csrf_token %}
+
+        <!-- Display form-wide errors (like missing fields, etc.) -->
+
+        {% if client_form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ client_form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <div class="row justify-content-center">
+        <!-- quantity -->
+            <!-- First Name -->
+            <div class="col-md-6 mb-3">
+                <label class="ml-5" for="full_name"><h6 class="ml-3"> : {{ client_form.full_name.label }}</h6></label>
+                {{ client_form.full_name }}
+                {% if client_form.full_name.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ client_form.full_name.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <!-- Phone -->
+        <div class="row justify-content-center">
+
+        <div class="col-md-6 mb-3">
+            <label class="ml-5" for="id_phone"><h6 class="ml-4"> : {{ client_form.phone.label }}</h6></label>
+            {{ client_form.phone }}
+            {% if client_form.phone.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ client_form.phone.errors }}
+                </div>
+            {% endif %}
+        </div>
+        </div>
+
+        <!-- City -->
+        <div class="row justify-content-center">
+
+        <div class="col-md-6 mb-3">
+            <label class="ml-5" for="id_city"><h6 class="ml-4"> : {{ client_form.city.label }}</h6></label>
+            {{ client_form.city }}
+            {% if client_form.city.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ client_form.city.errors }}
+                </div>
+            {% endif %}
+        </div>
+        </div>
+
+        <!-- Submit button -->
+        <div class="row justify-content-center">
+        <div class=" col-mb-6 text-center mr-1">
+            <button type="submit" class="btn btn-primary mt-3"> اضغط هنا لتاكيد الطلب </button>
+        </div>
+        <div class="col-mb-6 text-center">
+            <a href="/" class="btn btn-danger mt-3">الغاء</a>
+        </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Aceil{% endblock title %}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}">
+    {% block extrastyle %}
+    
+{% endblock extrastyle %}
+    
+</head>
+<body>
+    
+    {% if not request.user.is_authenticated %}        
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" dir="rtl">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/"> صفحة الترحيب </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="تبديل التنقل">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/"> الرئيسية </a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light nav-link" onclick="togle_about_section(event, 'about')">حول</button>
+                        <div id="about" class="card d-none nav_pop_out">
+                            <div class="card-body">
+                                <div class="#">
+                                    <h5 class="text-center">About Us</h5>
+                                    <p>We are a passionate team dedicated to providing the best services to our clients. With years of experience in our field, we strive to exceed expectations and deliver outstanding results.</p>
+                                
+                                    <h5 class="text-center">Our Mission</h5>
+                                    <p>Our mission is to deliver top-notch solutions that make a meaningful difference in our customers' lives. We are committed to innovation, quality, and customer satisfaction.</p>
+                                
+                                    <h5 class="text-center">Our Vision</h5>
+                                    <p>To be a leader in our industry, providing reliable and sustainable solutions to our clients and partners around the world.</p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light nav-link" onclick="togle_about_section(event, 'Contact-us')"> تواصل معنا </button>
+                        <div id="Contact-us" class="card d-none nav_pop_out">
+                            <div class="card-body ">
+                                <div class="#">
+                                    <h5 class="text-center">Contact Us</h5>
+                                    <p>If you have any questions or need further information, feel free to reach out to us through the form below:</p>
+                                
+                                    <form method="POST" action="#">
+                                        {% csrf_token %}
+                                        <div class="row justify-content-center">
+                                        <div class="form-group  col-md-8">
+                                            <input type="text" placeholder="Your Name here ... " class="form-control text-center" id="name" name="name" required>
+                                        </div>
+                                        </div>
+                                        <div class="row justify-content-center">
+                                            <div class="form-group  col-md-8">
+                                            <input type="email" placeholder="Your Email here ... " class="form-control text-center" id="email" name="email" required>
+                                        </div>
+                                        </div>
+                                        <div class="row justify-content-center">
+                                            <div class="form-group  col-md-8">
+                                            <textarea class="form-control text-center" id="message" name="message" rows="5" required placeholder="Your Message here ... "></textarea>
+                                        </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary mt-3">Send Message</button>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+        {% endif %}
+
+    <div>
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    {% if not request.user.is_authenticated %}        
+<footer class="bg-dark text-white pt-5 pb-4 mt-5">
+        <div class="container text-center text-md-left">
+            <div class="row text-center text-md-left">
+                <!-- Column 1: About Section -->
+                <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+                    <h5 class="text-uppercase mb-4 font-weight-bold text-warning">BIO-ORGANIQUE</h5>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Distinctio, rerum!
+                        Helping you build better web experiences.
+                    </p>
+                </div>
+    
+                <!-- Column 2: Useful Links -->
+                <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
+                    <h5 class="text-uppercase mb-4 font-weight-bold text-warning">Quick Links</h5>
+                    <p>
+                        <a href="/" class="text-info" style="text-decoration: none;">Home</a>
+                    </p>
+                    <p>
+                        <button class="btn btn-outline-dark text-info" onclick="togle_about_section(event, 'about')">حول</button>
+                    </p>
+                    <p>
+                        <a href="#" class="text-info" style="text-decoration: none;">Services</a>
+                    </p>
+                    <p>
+                        <button class="btn btn-outline-dark text-info" onclick="togle_about_section(event, 'about')"> تواصل معنا </button>
+                    </p>
+                </div>
+    
+                <!-- Column 3: Contact -->
+                <div class="col-md-5 col-lg-3 col-xl-3 mx-auto mt-3">
+                    <h5 class="text-uppercase mb-4 font-weight-bold text-warning">Contact</h5>
+                    <p>
+                        <i class="fas fa-home mr-3"></i> 1234 Street Name, Sale, Morocco
+                    </p>
+                    <p>
+                        <i class="fas fa-envelope mr-3"></i> info@example.com
+                    </p>
+                    <p>
+                        <i class="fas fa-phone mr-3"></i> +123 456 7890
+                    </p>
+                </div>
+    
+                <!-- Column 4: Social Media Links -->
+                <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+                    <h5 class="text-uppercase mb-4 font-weight-bold text-warning">Follow Us</h5>
+                    <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="btn btn-outline-light btn-floating m-1"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+    
+            <hr class="mb-4">
+    
+            <!-- Footer Bottom -->
+            <div class="row align-items-center">
+                <div class="col-md-7 col-lg-8">
+                    <p>© 2024 BIO-ORGANIQUE. All Rights Reserved.</p>
+                </div>
+                <div class="col-md-5 col-lg-4">
+                    <p class="text-center text-md-right">Powered by <a href="/" class="text-warning">BIO-ORGANIQUE</a></p>
+                </div>
+            </div>
+        </div>
+        <script>
+            function togle_about_section(event, card) {
+                event.stopPropagation()
+                const targeted_card = document.getElementById(card);
+                
+                // Toggle visibility when the card is clicked
+                if (targeted_card.classList.contains('d-none')) {
+                    targeted_card.classList.remove('d-none');
+                
+            
+                    setTimeout(() => {
+                        function handleClickOutside(event) {
+                            if (!targeted_card.contains(event.target)) {
+                                targeted_card.classList.add('d-none');
+                                document.removeEventListener('click', handleClickOutside); // Remove listener after hiding the card
+                            }
+                        }
+                        document.addEventListener('click', handleClickOutside);
+                    }, 0); 
+                // Hide card if mouse hasn't entered for a specified time
+                let mouseTimeout;
+                targeted_card.addEventListener('mouseenter', function() {
+                    clearTimeout(mouseTimeout);
+                });
+            
+                targeted_card.addEventListener('mouseleave', function() {
+                    mouseTimeout = setTimeout(() => {
+                        targeted_card.classList.add('d-none');
+                    }, 3000); // 3 seconds timeout before hiding the card
+                });
+                } else {
+                    targeted_card.classList.add('d-none');
+                }
+            }
+                    </script>
+    </footer>
+
+    {% endif %}
+     
+    <!-- Include FontAwesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>

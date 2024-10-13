@@ -1,0 +1,318 @@
+{% extends 'core/client_base.html' %}
+{% load static %}
+
+{% block title %} المنتوجات {% endblock %}
+
+{% block client %}
+
+{% if products %}
+    {% for product in products %}
+<hr>
+<hr>
+<hr>
+<div class="row mt-5">
+    <!-- بطاقة المنتوج -->
+    <div class="col-md-8 col-sm-12 mb-4">
+        <div class="card">
+            <div class="zooming-container">
+            <img id="main-product-image-for-{{ product.id }}" class="card-img-top zooming" src="{{ product.images.all.first.image.url }}" style="width: 100%; height: 350px;" alt="{{ product.name }}">
+            </div>
+            <div class="card-body">
+                <h5 class="card-title text-center">{{ product.name }}</h5>
+                <p class="card-text text-center">
+                    <span class="text-muted" style="text-decoration: line-through;"> درهم {{ product.original_price }}</span>
+                    <span class="text-danger h4 ml-2">{{ product.promotion_price }} درهم</span>
+                </p>
+                <div class="row">
+                    
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3 ml-3">
+            {% for image in product.images.all %}
+            <div class="col-3">
+                <button class="btn btn-light btn-lg" onclick="changePhoto({{product.id}}, {{image.id}})">
+                <img id="image-for-{{product.id}}-{{image.id}}" class="card-img" src="{{image.image.url}}" width='200' height='100' alt="{{product.name}}">
+                </button>
+            </div>            
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- قسم التقييمات -->
+    <div class="col-md-4 col-sm-12">
+        <div class="bg-light rounded-xl" dir="rtl">
+            <p class="text-dark" >
+                <strong class="text-muted text-center" ><p> فقرة المنتوج : </p></strong><br>
+                {{product.description}}
+            </p>
+        </div>
+        <div class="m-5">
+            <a href="{% url 'client:add_info' product.id %}" class="btn btn-primary text-center">
+            <div class=" ml-5 mr-5 mt-2 mb-2">
+                 اطلب الان 
+            </div>
+        </a>
+        </div>
+        <h4>التقييمات</h4>
+
+        <!-- متوسط التقييم بالنجوم -->
+        <div class="d-flex align-items-center mb-2">
+            <div class="mr-2" id="average-star-rating-{{ product.id }}">
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span>
+            </div>
+            <span  id="average-rating-{{product.id}}">{{ product.average_rating }}/5</span>
+        </div>
+
+        <!-- زر عرض/إخفاء التعليقات -->
+        <button class="btn btn-info mb-3" type="button" onclick="toggleComments({{product.id}})"> انظر التعليقات </button>
+        <button class="btn btn-success mb-3" type="button" onclick="toggleCommentingForm({{product.id}})"> اترك تعليقا </button>
+
+        <!-- قسم التعليقات المخفية -->
+        <div id="comments-section-{{product.id}}" class="card d-none pop_out">
+            <div class="row mt-2 ml-2">
+            <div class="col-4">
+                <button class="btn btn-info mb-3" type="button" onclick="toggleComments({{product.id}})"> اخف التعليقات </button>
+            </div>
+            </div>
+
+                <div class="card-body pop_out_info">
+                <h5 class="mb-3"> التعليقات </h5>
+                {% for review in product.reviews.all %}
+                
+                {% if review.is_active %}
+                    <div class="alert alert-dark ">
+                    <div class="mb-3 mt-3 ">
+                        <p class="ml-2"><strong>{{ review.user}}</strong> <span class="alert alert-warning ml-5">{{review.rating}}</span> <span class="fa fa-star checked"></span>: </p>
+                        <div class="alert alert-success m-2">
+                            {{ review.comment }}
+                        </div>
+                        <div class="d-flex">
+                            {% for star in range %}
+                                {% if star < review.rating %}
+                                    <span class="fa fa-star checked"></span>
+                                {% else %}
+                                    <span class="fa fa-star"></span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="mb-5 b-sg">
+                        <h5 class="ml-5 mb-3">الردود:</h5>
+                        <ul class="ml-5">
+                    {% for reply in review.replies.all %}
+                    <li>
+                    {% if reply.is_active %}
+                    <strong>{{ reply.user.username }}:</strong>
+                    <span class="alert alert-info"> {{ reply.reply_data }}</span>
+                    {% else %}
+                    <span class="alert alert-info"> .لا ردود بعد</span>
+                    {% endif %}
+                    </li>
+                    {% empty %}
+                    <span class="alert alert-info"> .لا ردود بعد</span>
+                    {% endfor %}
+                    </ul>
+                    </div>
+                    </div>
+                                    
+                {% endif %}
+
+                {% empty %}
+                <span class="alert alert-info"> .لا تعليقات بعد</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- قسم إضافة تقييم -->
+        <div id="coment_form-{{ product.id }}" class="card d-none pop_out">
+        <div  class="card-body ">
+        <h5> اترك تعليقا </h5>
+        <form method="POST" action="{% url 'product:add_review' product.id %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="rating">التقييم:</label>
+                <div id="star-rating-{{ product.id }}">
+                    <!-- نجوم التقييم -->
+                    <span class="fa fa-star" data-value="1"></span>
+                    <span class="fa fa-star" data-value="2"></span>
+                    <span class="fa fa-star" data-value="3"></span>
+                    <span class="fa fa-star" data-value="4"></span>
+                    <span class="fa fa-star" data-value="5"></span>
+                </div>
+            </div>
+            
+            <input type="hidden" name="rating" id="rating-value-{{product.id}}" required value="0">
+            <div class="form-group">
+               {{review_form.as_p}}
+            </div>
+            <div class="row justify-content-center mb-3">
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-success">أرسل التقييم</button>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-danger" type="button" onclick="toggleCommentingForm({{product.id}})"> الغاء </button>
+                </div>
+            </div>
+        </form>
+        </div>
+       </div>
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<div class="container text-center mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card shadow-sm p-4">
+                <h1 class="display-4 text-danger">المنتج غير موجود</h1>
+                <p class="lead">عذرًا، لم نتمكن من العثور على المنتج الذي تبحث عنه.</p>
+                <p class="text-muted">حاول البحث عن منتج آخر أو العودة إلى صفحة المنتجات.</p>
+                
+                <div class="input-group my-4">
+                </div>
+                
+                <a href="/" class="btn btn-outline-secondary">العودة إلى المنتجات</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+    
+
+<!-- جافاسكريبت اختيارية لعرض/إخفاء التعليقات -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // إضافة مستمعات الأحداث لكل نجوم التقييم الخاصة بالمنتج
+        document.querySelectorAll('[id^="star-rating-"]').forEach(function (starRatingElement) {
+            // استخراج معرف المنتج من معرف العنصر
+            const productId = starRatingElement.id.split('-')[2];  
+            const stars = starRatingElement.querySelectorAll('.fa-star');
+            const ratingInput = document.getElementById(`rating-value-${productId}`);
+    
+            // إذا لم يتم العثور على العناصر، قم بتسجيل خطأ وتوقف
+            if (!stars || !ratingInput) {
+                console.error(`لم يتم العثور على النجوم أو إدخال التقييم للمنتج ${productId}`);
+                return;
+            }
+    
+            stars.forEach(star => {
+                // عند النقر على نجمة
+                star.addEventListener('click', function() {
+                    const rating = this.getAttribute('data-value');
+                    ratingInput.value = rating;  // ضبط قيمة الإدخال المخفي
+                    updateStars(stars, rating);
+                });
+    
+                // عند التمرير فوق النجوم (اختياري لمظهر مرئي)
+                star.addEventListener('mouseover', function() {
+                    const rating = this.getAttribute('data-value');
+                    updateStars(stars, rating);
+                });
+    
+                // اختياريًا، إعادة ضبط النجوم عند مغادرة الماوس (إذا رغبت)
+                starRatingElement.addEventListener('mouseleave', function() {
+                    const currentRating = ratingInput.value;
+                    updateStars(stars, currentRating);
+                });
+            });
+    
+            // وظيفة لتحديث مظهر النجوم
+            function updateStars(stars, rating) {
+                stars.forEach(star => {
+                    const starValue = star.getAttribute('data-value');
+                    if (starValue <= rating) {
+                        star.classList.add('checked');  // إضافة فئة 'checked' لتلوين النجمة
+                    } else {
+                        star.classList.remove('checked');  // إزالة اللون من النجوم بعد النجمة المختارة
+                    }
+                });
+            }
+    
+            // ضبط الحالة الأولية بناءً على التقييم الحالي
+            const initialRating = ratingInput.value;
+            if (initialRating > 0) {
+                updateStars(stars, initialRating);
+            }
+            // zooming images
+            const zoomContainers = document.querySelectorAll('.zooming-container');
+
+            zoomContainers.forEach(container => {
+                const image = container.querySelector('.zooming');
+        
+                // Listen for mousemove on the container
+                container.addEventListener('mousemove', function (e) {
+                    const rect = container.getBoundingClientRect(); // Get container's position
+                    const x = e.clientX - rect.left;  // X-coordinate of mouse inside container
+                    const y = e.clientY - rect.top;   // Y-coordinate of mouse inside container
+        
+                    // Calculate percentage of the mouse position within the container
+                    const xPercent = x / container.offsetWidth * 100;
+                    const yPercent = y / container.offsetHeight * 100;
+        
+                    // Move the image so that it follows the mouse while zoomed in
+                    image.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+                });
+        
+                // Reset image position when the mouse leaves the container
+                container.addEventListener('mouseleave', function () {
+                    image.style.transformOrigin = 'center'; // Reset to center on mouse leave
+                });
+            });
+
+        });
+    });    
+    document.querySelectorAll('[id^="average-star-rating-"]').forEach(function (averageRatingElement) {
+        const productId = averageRatingElement.id.split('-')[3];  // استخراج معرف المنتج
+        const stars = averageRatingElement.querySelectorAll('.fa-star');  // الحصول على جميع النجوم لهذا المنتج
+        const averageRatingValue = parseInt(document.getElementById(`average-rating-${productId}`).textContent);  // الحصول على قيمة التقييم المتوسط
+    
+        // تأكد من أن قيمة التقييم المتوسط بين 1 و 5
+        if (averageRatingValue >= 1 && averageRatingValue <= 5) {
+            // تمرير عبر النجوم وتحديدها بناءً على التقييم المتوسط
+            stars.forEach((star, index) => {
+                if (index < averageRatingValue) {
+                    star.classList.add('checked');  // إضافة فئة 'checked' لتلوين النجمة
+                } else {
+                    star.classList.remove('checked');  // إزالة فئة 'checked' للنجوم غير الممتلئة
+                }
+            });
+        }
+    });
+    
+    function toggleComments(product_id) {
+    var commentsSection = document.getElementById(`comments-section-${product_id}`);
+    if (commentsSection.classList.contains('d-none')) {
+        commentsSection.classList.remove('d-none');
+    } else {
+        commentsSection.classList.add('d-none');
+    }
+}
+    
+    function toggleCommentingForm(product_id) {
+    var commentsSection = document.getElementById(`coment_form-${product_id}`);
+    if (commentsSection.classList.contains('d-none')) {
+        commentsSection.classList.remove('d-none');
+    } else {
+        commentsSection.classList.add('d-none');
+    }
+}
+// Function to change the main product image
+function changePhoto(productId, imageId) {
+    // Get the main image element using the product ID
+    var mainImage = document.getElementById("main-product-image-for-" + productId);
+    
+    // Get the thumbnail image source using the product ID and image ID
+    var thumbnailImage = document.getElementById('image-for-' + productId + '-' + imageId);
+    
+    // Update the main image's src with the thumbnail's src
+    mainImage.src = thumbnailImage.src;
+}
+
+</script>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'core/Rachid_base.html' %}
+{% block title %}products reviews{% endblock title %}
+{% block rachid %}
+<form method="POST" action="{% url 'product:reply_add' review_id %}">
+    {% csrf_token %}
+    <div class="form-group">
+        {{ form.reply_data.label_tag }} 
+        {{ form.reply_data }}
+    </div>
+    <div class="form-check">
+        {{ form.is_active }} {{ form.is_active.label_tag }}  <!-- Hidden checkbox field -->
+    </div>
+    <button type="submit" class="btn btn-primary">Submit Reply</button>
+</form>
+
+{% endblock %}
